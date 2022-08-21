@@ -1,0 +1,22 @@
+{
+  "name": "kim-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crow-cafe/kim-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crow-cafe/kim-bot/issues"
+  },
+  "homepage": "https://github.com/crow-cafe/kim-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.2.0"
+  }
+}
