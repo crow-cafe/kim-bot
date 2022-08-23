@@ -22,7 +22,7 @@ client.on('interactionCreate', async interaction => {
 	const { commandName } = interaction;
 
 	if (commandName === 'hi') {
-		await interaction.reply('\"Hello, I\'m Kim Kitsuragi.\" His grip is firm. \"Lieutenant, Precinct 57. You must be from the 41st...\"');
+		await interaction.reply('"Hello, I\'m Kim Kitsuragi." His grip is firm. "Lieutenant, Precinct 57. You must be from the 41st..."');
 	} else if (commandName === 'server') {
 		await interaction.reply('this hasnt been implemented yet lol');
 	} else if (commandName === 'user') {
