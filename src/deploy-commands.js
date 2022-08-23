@@ -1,10 +1,7 @@
-import { SlashCommandBuilder, Routes } from 'discord.js';
-import { REST } from '@discordjs/rest';
-import fs from 'fs';
+const { SlashCommandBuilder, Routes } = require('discord.js');
+const { REST } = require('@discordjs/rest');
 
-const data = JSON.parse(fs.readFileSync('./config.json'));
-const token = data.token;
-const clientId = data.clientId;
+const { clientId, guildId, token } = require('./config.json');
 
 const commands = [
 	new SlashCommandBuilder().setName('hi').setDescription('Gives birth to Kim'),

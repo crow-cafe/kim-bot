@@ -1,11 +1,8 @@
 // Require the necessary discord.js classes
-import { Client, GatewayIntentBits } from 'discord.js';
-import fetch from 'node-fetch';
-import fs from 'fs';
+const { Client, GatewayIntentBits } = require('discord.js');
+const fetch = require('cross-fetch');
 
-const data = JSON.parse(fs.readFileSync('./config.json'));
-const token = data.token;
-const apexkey = data.apexkey;
+const { token, apexkey } = require('./config.json');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -18,15 +15,6 @@ let rooster_count = 0;
 client.once('ready', () => {
 	console.log('Ready!');
 });
-
-/*
-// Kim I Love You
-client.on("message", msg => {
-    if (msg.content === "hey kim") {
-      msg.reply("\"Hello, I'm Kim Kitsuragi.\" His grip is firm. \"Lieutenant, Precinct 57. You must be from the 41st...\"");
-    }
-  })
-  */
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
