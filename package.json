@@ -1,5 +1,6 @@
 {
   "name": "kim-bot",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -20,7 +21,8 @@
   "homepage": "https://github.com/crow-cafe/kim-bot#readme",
   "dependencies": {
     "@discordjs/rest": "^1.0.1",
-    "discord.js": "^14.2.0"
+    "discord.js": "^14.2.0",
+    "node-fetch": "^3.2.10"
   },
   "devDependencies": {
     "eslint": "^8.22.0",

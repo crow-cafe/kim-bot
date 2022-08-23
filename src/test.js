@@ -1,11 +1,18 @@
 // Require the necessary discord.js classes
-const { Client, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+import { Client, GatewayIntentBits } from 'discord.js';
+import fetch from 'node-fetch';
+import fs from 'fs';
+
+const data = JSON.parse(fs.readFileSync('./config.json'));
+const token = data.token;
+const apexkey = data.apexkey;
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 let maritalStatus = false;
+let peg_count = 0;
+let rooster_count = 0;
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
@@ -60,6 +67,26 @@ client.on('interactionCreate', async interaction => {
 		}
 	}
 
+	if (commandName === 'apexmap') {
+		const response = await fetch('https://api.mozambiquehe.re/maprotation?auth=' + apexkey);
+		const data = await response.json();
+		let map = data.current.map;
+		let nextmap = data.next.map;
+		let nextmapduration = data.next.DurationInMinutes;
+		let timeleft = data.current.remainingMins;
+		let message = '**Current map:** ' + `${map}` + ' (' + `${timeleft}` + ' minutes left) \n**Next map:** ' + `${nextmap}` + ' (Duration: ' + `${nextmapduration}` + ' minutes)'
+		await interaction.reply(message);
+	}
+
+	if (commandName === 'peg') {
+		peg_count++;
+		await interaction.reply('you give kim a clothes peg. kim has ' + `${peg_count}` + ' peg(s)');
+	}
+
+	if (commandName === 'cock') {
+		rooster_count++;
+		await interaction.reply('you give kim a rooster. kim has ' + `${rooster_count}` + ' rooster(s)');
+	}
 });
 
 // Login to Discord with your client's token
