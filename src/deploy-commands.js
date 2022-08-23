@@ -1,20 +1,19 @@
-const { SlashCommandBuilder, Routes } = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
 const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord.js');
 
 const { clientId, token } = require('./config.json');
 
-const commands = [
-	new SlashCommandBuilder().setName('hi').setDescription('Gives birth to Kim'),
-	new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
-	new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
-	new SlashCommandBuilder().setName('marry').setDescription('Holy Matrimony'),
-	new SlashCommandBuilder().setName('divorce').setDescription('Kim deserves better'),
-	new SlashCommandBuilder().setName('maritalstatus').setDescription('None of your business'),
-	new SlashCommandBuilder().setName('apexmap').setDescription('Kim is a big fan of the hit game Apex Legends'),
-	new SlashCommandBuilder().setName('peg').setDescription('...'),
-	new SlashCommandBuilder().setName('cock').setDescription('...'),
-]
-	.map(command => command.toJSON());
+const commands = [];
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	commands.push(command.data.toJSON());
+}
 
 const rest = new REST({ version: '10' }).setToken(token);
 

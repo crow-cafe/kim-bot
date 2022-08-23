@@ -1,17 +1,20 @@
-// Require the necessary discord.js classes
-const { Client, GatewayIntentBits } = require('discord.js');
-const fetch = require('cross-fetch');
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { token } = require('./config.json');
 
-const { token, apexkey } = require('./config.json');
-
-// Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-let maritalStatus = false;
-let peg_count = 0;
-let rooster_count = 0;
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-// When the client is ready, run this code (only once)
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	client.commands.set(command.data.name, command);
+}
+
 client.once('ready', () => {
 	console.log('Ready!');
 });
@@ -19,63 +22,16 @@ client.once('ready', () => {
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
 
-	const { commandName } = interaction;
+	const command = client.commands.get(interaction.commandName);
 
-	if (commandName === 'hi') {
-		await interaction.reply('"Hello, I\'m Kim Kitsuragi." His grip is firm. "Lieutenant, Precinct 57. You must be from the 41st..."');
-	} else if (commandName === 'server') {
-		await interaction.reply('this hasnt been implemented yet lol');
-	} else if (commandName === 'user') {
-		await interaction.reply('this hasnt been implemented yet lol');
-	}
+	if (!command) return;
 
-	if (commandName === 'marry') {
-		if (maritalStatus === false) {
-			maritalStatus = true;
-			await interaction.reply('You are now married to Kim');
-		} else {
-			await interaction.reply('Kim is taken and the Christian God denounces polyamory');
-		}
-	}
-
-	if (commandName === 'divorce') {
-		if (maritalStatus === true) {
-			maritalStatus = false;
-			await interaction.reply('You have divorced Kim\'s marriage, even if you weren\'t married to him, because I didn\'t account for the case of un-marrying him from other people when i was coding this, and i can\'t be arsed to for a funny gag, at least not yet');
-		} else {
-			await interaction.reply('To the spirits be free');
-		}
-	}
-
-	if (commandName === 'maritalstatus') {
-		if (maritalStatus === true) {
-			await interaction.reply('Kim is currently married');
-		} else {
-			await interaction.reply('Kim is currently not married');
-		}
-	}
-
-	if (commandName === 'apexmap') {
-		const response = await fetch('https://api.mozambiquehe.re/maprotation?auth=' + apexkey);
-		const data = await response.json();
-		let map = data.current.map;
-		let nextmap = data.next.map;
-		let nextmapduration = data.next.DurationInMinutes;
-		let timeleft = data.current.remainingMins;
-		let message = '**Current map:** ' + `${map}` + ' (' + `${timeleft}` + ' minutes left) \n**Next map:** ' + `${nextmap}` + ' (Duration: ' + `${nextmapduration}` + ' minutes)'
-		await interaction.reply(message);
-	}
-
-	if (commandName === 'peg') {
-		peg_count++;
-		await interaction.reply('you give kim a clothes peg. kim has ' + `${peg_count}` + ' peg(s)');
-	}
-
-	if (commandName === 'cock') {
-		rooster_count++;
-		await interaction.reply('you give kim a rooster. kim has ' + `${rooster_count}` + ' rooster(s)');
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
 
-// Login to Discord with your client's token
 client.login(token);
