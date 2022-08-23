@@ -6,6 +6,9 @@ const commands = [
 	new SlashCommandBuilder().setName('hi').setDescription('Gives birth to Kim'),
 	new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
 	new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
+	new SlashCommandBuilder().setName('marry').setDescription('Holy Matrimony'),
+	new SlashCommandBuilder().setName('divorce').setDescription('Kim deserves better'),
+	new SlashCommandBuilder().setName('maritalstatus').setDescription('None of your business'),
 ]
 	.map(command => command.toJSON());
 
